@@ -1,0 +1,5 @@
+.idea
+myproject/.idea
+myproject/__pycache__
+myproject/db.sqlite3
+myproject/manage.py
