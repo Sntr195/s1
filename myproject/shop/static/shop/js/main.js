@@ -260,6 +260,37 @@
 	
 	};
 
+	var addToCart = function() {
+		$('.addingToCart').on('click', function (e) {
+           // alert("Your values are :"+ $(this).parents('.itemholder').attr('data-id'));
+           // alert('Товар добавлен в корзину');
+           let tmp = getCookie("cartids");
+           let currentItemId = $(this).parents('.itemholder').attr('data-id')
+			let item_name = $(this).parents('.product').children('.desc').children('h3').children('.item-name').text();
+
+			if (tmp !== undefined){
+				if (!tmp.includes(currentItemId)){
+				  document.cookie = "cartids=" + tmp + "," + currentItemId + ";";
+				}
+			} else {
+				document.cookie = "cartids=" + currentItemId;
+			}
+
+			VanillaToasts.create({
+ 			 title: 'Товар добавлен в корзину',
+  				text: item_name,
+				timeout: 2000
+			});
+
+
+
+        });
+
+
+
+
+	};
+
 
 	// Loading page
 	var loaderPage = function() {
@@ -340,6 +371,7 @@
 		dropdown();
 		customDropdown();
 		tabs();
+		addToCart();
 		goToTop();
 		loaderPage();
 		counterWayPoint();
@@ -357,3 +389,22 @@ function openNav() {
 function closeNav() {
   document.getElementById("mySidenav").style.width = "0";
 }
+
+function getCookie(name) {
+  let matches = document.cookie.match(new RegExp(
+    "(?:^|; )" + name.replace(/([\.$?*|{}\(\)\[\]\\\/\+^])/g, '\\$1') + "=([^;]*)"
+  ));
+  return matches ? decodeURIComponent(matches[1]) : undefined;
+}
+
+function deleteAllCookies() {
+    var cookies = document.cookie.split(";");
+
+    for (var i = 0; i < cookies.length; i++) {
+        var cookie = cookies[i];
+        var eqPos = cookie.indexOf("=");
+        var name = eqPos > -1 ? cookie.substr(0, eqPos) : cookie;
+        document.cookie = name + "=;expires=Thu, 01 Jan 1970 00:00:00 GMT";
+    }
+}
+
