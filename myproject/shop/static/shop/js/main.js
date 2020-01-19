@@ -1,4 +1,27 @@
 ;(function () {
+
+
+
+
+    var showLocalStorage = function(){
+        let products;
+        let text = "";
+        if(localStorage.getItem('products')){
+                products = JSON.parse(localStorage.getItem('products'));
+
+                for (i in products){
+                    let beforeText;
+                    beforeText = products[i].name + ", в кол-ве: " + products[i].quantity + ", \n";
+
+                    text += beforeText;
+                }
+
+                 alert("У вас в корзине: " + text);
+        }
+
+
+
+    }
 	
 	'use strict';
 
@@ -264,17 +287,41 @@
 		$('.addingToCart').on('click', function (e) {
            // alert("Your values are :"+ $(this).parents('.itemholder').attr('data-id'));
            // alert('Товар добавлен в корзину');
-           let tmp = getCookie("cartids");
-           let currentItemId = $(this).parents('.itemholder').attr('data-id')
-			let item_name = $(this).parents('.product').children('.desc').children('h3').children('.item-name').text();
+           // let tmp = getCookie("cartids");
+           // let currentItemId = $(this).parents('.itemholder').attr('data-id')
+            let item_name = $(this).parents('.product').children('.desc').children('h3').children('.item-name').text();
+            let productId = $(this).parents('.itemholder').attr('data-id');
+           //
+			// if (tmp !== undefined){
+			// 	if (!tmp.includes(currentItemId)){
+			// 	  document.cookie = "cartids=" + tmp + "," + currentItemId + ";";
+			// 	}
+			// } else {
+			// 	document.cookie = "cartids=" + currentItemId;
+			// }
 
-			if (tmp !== undefined){
-				if (!tmp.includes(currentItemId)){
-				  document.cookie = "cartids=" + tmp + "," + currentItemId + ";";
-				}
-			} else {
-				document.cookie = "cartids=" + currentItemId;
-			}
+            let products = [];
+            let q = 1;
+            if(localStorage.getItem('products')){
+                products = JSON.parse(localStorage.getItem('products'));
+            }
+            if (!products.some(e => e.productId == productId)){
+                products.push({'productId' : productId, quantity : q ,name : item_name});
+            } else {
+                 for (i in products){
+                     if (products[i].productId == productId){
+                         products[i].quantity += 1;
+                     }
+
+                 }
+            }
+
+
+            localStorage.setItem('products', JSON.stringify(products));
+
+            console.log('Adding item to local storage: ' + $(this).parents('.itemholder').attr('data-id'));
+
+
 
 			VanillaToasts.create({
  			 title: 'Товар добавлен в корзину',
@@ -364,6 +411,7 @@
 
 	
 	$(function(){
+	    showLocalStorage();
 		mobileMenuOutsideClick();
 		offcanvasMenu();
 		burgerMenu();
